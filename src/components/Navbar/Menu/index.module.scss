@@ -1,0 +1,39 @@
+.menu {
+  font-size: 50px;
+  color: black;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.menu:before {
+  content: "";
+  display: inline-block;
+  width: 0px;
+  height: 2px;
+  background: #000;
+  margin-right: 20px;
+  transition: 0.3s;
+}
+.menu:hover::before {
+  content: "";
+  display: inline-block;
+  width: 60px;
+}
+
+.menuActive {
+  font-size: 50px;
+  color: black;
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: 0.3s;
+}
+.menuActive::before {
+  content: "";
+  display: inline-block;
+  width: 120px;
+  height: 4px;
+  background: #000;
+  margin-right: 20px;
+  transition: 0.3s;
+}

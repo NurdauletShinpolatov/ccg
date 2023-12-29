@@ -5,6 +5,8 @@ import {
   Image,
   Text,
   Button,
+  Collapse,
+  Box,
   Drawer,
   DrawerBody,
   DrawerFooter,
@@ -15,103 +17,70 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import Menu from "./Menu";
 
 export default function Navbar() {
-  // navbar has 2 color variants: black and white
-  const [color, setColor] = useState("#fff");
-
-  const toBlack = () => setColor("#000");
-  const toWhite = () => setColor("#fff");
-
-  // style to apply when NavLink is active
   const onActiveStyle = {
-    borderBottom: `2px solid ${color}`,
+    borderBottom: `2px solid #000`,
     transition: "0.4s",
   };
   const onActive = ({ isActive }) => (isActive ? onActiveStyle : null);
 
   // state for Drawer
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onToggle, onClose } = useDisclosure();
   return (
     <Flex
       justifyContent="space-between"
       p="42px 7%"
       bg="red"
-      color={color}
+      color="#000"
       fontSize="16px"
       fontWeight="600"
-      pos="fixed"
+      pos="sticky"
+      top="0px"
+      left="0px"
+      right="0px"
+      flexDir="column"
+      maxH="100vh"
     >
-      <Link to="/" onClick={toWhite}>
-        {color === "#fff" && (
+      <Flex justifyContent="space-between">
+        <Link to="/">
           <Image
-            src="src/assets/imgs/navbar/logo-white.svg"
+            src="./assets/imgs/navbar/logo-black.svg"
             w={{ sm: "120px", lg: "150px" }}
           />
+        </Link>
+
+        {!isOpen && (
+          <Flex gap="40px" display={{ base: "none", sm: "none", lg: "flex" }}>
+            <NavLink style={onActive} className={styles.navlink} to="/company">
+              Company
+            </NavLink>
+
+            <NavLink style={onActive} className={styles.navlink} to="/services">
+              Our Services
+            </NavLink>
+
+            <NavLink
+              style={onActive}
+              className={styles.navlink}
+              to="/contact-us"
+            >
+              Contact us
+            </NavLink>
+          </Flex>
         )}
-        {color === "#000" && (
+
+        <Flex alignItems="center" gap="7px" cursor="pointer" onClick={onToggle}>
+          <Text>{!isOpen ? "Menu" : "Close"}</Text>
+
           <Image
-            src="src/assets/imgs/navbar/logo-black.svg"
-            w={{ sm: "120px", lg: "150px" }}
+            src={`./assets/imgs/navbar/${!isOpen ? "menu-black" : "close"}.svg`}
           />
-        )}
-      </Link>
-
-      <Flex gap="40px" display={{ base: "none", sm: "none", lg: "flex" }}>
-        <NavLink
-          style={onActive}
-          className={styles.navlink}
-          to="/company"
-          onClick={toBlack}
-        >
-          Company
-        </NavLink>
-        <NavLink
-          style={onActive}
-          className={styles.navlink}
-          to="/services"
-          onClick={toBlack}
-        >
-          Our Services
-        </NavLink>
-        <NavLink
-          style={onActive}
-          className={styles.navlink}
-          to="/contact-us"
-          onClick={toBlack}
-        >
-          Contact us
-        </NavLink>
+        </Flex>
       </Flex>
 
-      <Flex alignItems="center" gap="7px" cursor="pointer" onClick={onOpen}>
-        <Text>Menu</Text>
-        {color === "#fff" && (
-          <Image src="src/assets/imgs/navbar/menu-white.svg" />
-        )}
-        {color === "#000" && (
-          <Image src="src/assets/imgs/navbar/menu-black.svg" />
-        )}
-      </Flex>
-
-      <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="full">
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Create your account</DrawerHeader>
-
-          <DrawerBody>
-            <Text>Text</Text>
-          </DrawerBody>
-
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="blue">Save</Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+      <Menu onClose={onClose} isOpen={isOpen} />
     </Flex>
   );
 }
